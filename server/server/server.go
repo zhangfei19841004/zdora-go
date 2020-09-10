@@ -21,7 +21,7 @@ type wsServer struct {
 
 func NewWsServer() *wsServer {
 	ws := new(wsServer)
-	ws.addr = config.GetConfig().Server.Port
+	ws.addr = ":" + config.GetConfig().Server.Port
 	ws.upgrade = &websocket.Upgrader{
 		ReadBufferSize:  4096,
 		WriteBufferSize: 1024,

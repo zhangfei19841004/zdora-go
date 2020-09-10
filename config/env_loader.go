@@ -17,25 +17,11 @@ func newLoader(prefix string) *loader {
 	return &loader{CamelCase: true, DefaultTagName: "default", Prefix: prefix}
 }
 
-// loader satisfies the loader interface. It parses a struct's field tags
-// and populates the each field with that given tag.
 type loader struct {
-	// DefaultTagName is the default tag name for struct fields to define
-	// default values for a field. Example:
-	//
-	//   // Field's default value is "koding".
-	//   Name string `default:"koding"`
-	//
-	// The default value is "default" if it's not set explicitly.
 	DefaultTagName string
-	// Prefix prepends given string to every environment variable
-	// {STRUCTNAME}_FIELDNAME will be {PREFIX}_FIELDNAME
+
 	Prefix string
 
-	// CamelCase adds a separator for field names in camelcase form. A
-	// fieldname of "AccessKey" would generate a environment name of
-	// "STRUCTNAME_ACCESSKEY". If CamelCase is enabled, the environment name
-	// will be generated in the form of "STRUCTNAME_ACCESS_KEY"
 	CamelCase bool
 }
 
@@ -66,8 +52,6 @@ func (l *loader) Load(s interface{}) error {
 	return nil
 }
 
-// processTagField gets tagName and the field, recursively checks if the field has the given
-// tag, if yes, sets it otherwise ignores
 func (l *loader) processTagField(tagName string, field *structs.Field) error {
 	switch field.Kind() {
 	case reflect.Struct:
@@ -91,8 +75,6 @@ func (l *loader) processTagField(tagName string, field *structs.Field) error {
 	return nil
 }
 
-// processEnvField gets leading name for the env variable and combines the current
-// field's name and generates environment variable names recursively
 func (l *loader) processEnvField(prefix string, field *structs.Field) error {
 	fieldName := l.getEnvFieldName(prefix, field.Name())
 
@@ -117,7 +99,6 @@ func (l *loader) processEnvField(prefix string, field *structs.Field) error {
 	return nil
 }
 
-// PrintEnvs prints the generated environment variables to the std out.
 func (l *loader) PrintEnvs(s interface{}) {
 	strct := structs.New(s)
 	prefix := l.getPrefix(strct)
@@ -126,7 +107,6 @@ func (l *loader) PrintEnvs(s interface{}) {
 	}
 }
 
-// printEnvField prints the field of the config struct for the flag.Usage
 func (l *loader) printEnvField(prefix string, field *structs.Field) {
 	fieldName := l.getEnvFieldName(prefix, field.Name())
 
@@ -140,8 +120,6 @@ func (l *loader) printEnvField(prefix string, field *structs.Field) {
 	}
 }
 
-// getEnvFieldName generates the field name combined with the prefix and the
-// struct's field name
 func (l *loader) getEnvFieldName(prefix string, name string) string {
 	fieldName := strings.ToUpper(name)
 	if l.CamelCase {
@@ -151,9 +129,6 @@ func (l *loader) getEnvFieldName(prefix string, name string) string {
 	return strings.ToUpper(prefix) + "_" + fieldName
 }
 
-// fieldSet sets field value from the given string value. It converts the
-// string value in a sane way and is usefulf or environment variables or flags
-// which are by nature in string types.
 func fieldSet(field *structs.Field, v string) error {
 	switch f := field.Value().(type) {
 	case flag.Value:

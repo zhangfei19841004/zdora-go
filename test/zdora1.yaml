@@ -1,0 +1,8 @@
+server:
+  server1:
+    test1: "10"
+  server2: "20"
+server0:
+  server3: "30"
+  server6:
+    server5: "50"

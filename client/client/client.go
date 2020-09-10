@@ -116,7 +116,7 @@ func Send(message string) {
 func Run() {
 	interrupt := make(chan os.Signal, 1)
 	signal.Notify(interrupt, os.Interrupt)
-	u := url.URL{Scheme: "ws", Host: config.GetConfig().Server.Host + config.GetConfig().Server.Port, Path: "/ws"}
+	u := url.URL{Scheme: "ws", Host: config.GetConfig().Server.Host + ":" + config.GetConfig().Server.Port, Path: "/ws"}
 	log.Printf("connecting to %s", u.String())
 	var header = make(http.Header)
 	clientId := util.GenerateClientId()

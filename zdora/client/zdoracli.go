@@ -16,7 +16,7 @@ import (
 )
 
 func getCli() (*websocket.Conn, error) {
-	u := url.URL{Scheme: "ws", Host: config.GetConfig().Server.Host + config.GetConfig().Server.Port, Path: "/ws"}
+	u := url.URL{Scheme: "ws", Host: config.GetConfig().Server.Host + ":" + config.GetConfig().Server.Port, Path: "/ws"}
 	var header = make(http.Header)
 	clientId := util.GenerateClientId()
 	header.Add("clientId", clientId)
